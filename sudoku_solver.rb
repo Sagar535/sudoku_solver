@@ -4,4 +4,8 @@
 =end
 def sudoku_solver(board)
 end
+class Array
+  def integer?
+    false
+  end
 end
