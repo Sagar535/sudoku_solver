@@ -3,6 +3,81 @@
  each of those array represent a row
 =end
 def sudoku_solver(board)
+  solved = false
+  loops = (0..8).to_a
+
+  # assign possible values 1 to 9 to each cell that doesn't hold any value
+
+  loops.each do |first_loop|
+    loops.each do |second_loop|
+      board[first_loop][second_loop] ||= (1..9).to_a
+    end
+  end
+
+  p board
+
+  loop_count = 0
+
+  until solved
+
+    p "solved: #{solved}"
+    loops.each do |first_loop|
+      loops.each do |second_loop|
+        cell = board[first_loop][second_loop]
+        # eliminate from the related rows
+        loops.each do |row_loop|
+          next if row_loop == second_loop # skip if we are in same cell
+
+          row_cell = board[first_loop][row_loop]
+          next if row_cell.integer?
+
+          board[first_loop][row_loop] -= [cell] if row_cell.include?(cell)
+
+          board[first_loop][row_loop] = board[first_loop][row_loop].first if board[first_loop][row_loop].count == 1
+        end
+
+        # eliminate from the related columns
+        loops.each do |column_loop|
+          next if column_loop == first_loop # skip if we are in same cell
+
+          column_cell = board[column_loop][second_loop]
+          next if column_cell.integer?
+
+          board[column_loop][second_loop] -= [cell] if column_cell.include?(cell)
+
+          board[column_loop][second_loop] = board[column_loop][second_loop].first if board[column_loop][second_loop].count == 1
+        end
+
+        # eliminate from the box
+        box = box_finder(first_loop, second_loop)
+
+        box.each do |xy|
+          next if xy == [first_loop, second_loop]
+          x, y = xy
+          box_cell = board[x][y]
+          next if box_cell.integer?
+
+          board[x][y] -= [cell] if box_cell.include?(cell)
+
+          board[x][y] = board[x][y].first if board[x][y].count == 1
+        end
+      end
+    end
+
+    loop_count += 1
+    solved = loop_count == 100
+  end
+
+  p board
+end
+
+# TODO: FIXME: Complete it so that we can print the board at last
+def board_printer(board)
+  loops = (0..8).to_a
+
+  loops.each do |first_loop|
+  end
+end
 
 # cell will be array of
 def box_finder(row, column)
