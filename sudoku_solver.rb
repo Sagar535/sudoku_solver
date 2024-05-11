@@ -3,6 +3,24 @@
  each of those array represent a row
 =end
 def sudoku_solver(board)
+
+# cell will be array of
+def box_finder(row, column)
+  relative_position = find_relative_position(row, column)
+
+  first_box = [
+    [0, 0], [0, 1], [0, 2],
+    [1, 0], [1, 1], [1, 2],
+    [2, 0], [2, 1], [2, 2]
+  ]
+
+  required_box = first_box.map do |cell|
+                    row_offset = cell[0] - relative_position[0]
+                    column_offset = cell[1] - relative_position[1]
+                    [row + row_offset, column + column_offset]
+                  end
+
+  required_box
 end
 
 # if box was overlapped with first box, what will be the position
